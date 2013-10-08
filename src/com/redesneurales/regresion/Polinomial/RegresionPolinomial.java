@@ -43,7 +43,8 @@ public class RegresionPolinomial {
 		sb.append("\nplot F(x)");
 		System.out.print(sb.toString());
 		try {
-			file = new File("/home/billowkib/Development/Regresionscript.gp");
+			//Se Cambio la dirección donde se guarda el script resultante
+			file = new File("~/Regresionscript.gp");
 			fop = new FileOutputStream(file);
 			// Si no existe el archivo, se crea
 			if (!file.exists()){
@@ -76,7 +77,7 @@ public class RegresionPolinomial {
 			result += coeficientes[i]*Math.pow(x, i);
 		}
 		return result;
-	}
+	} 
 	public static void main (String [] args) {
 		RegresionPolinomial Rpol = new RegresionPolinomial();
 		double coeficientesEntrada[]= {0,0,0,0,0,0,0,0};
