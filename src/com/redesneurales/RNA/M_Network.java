@@ -18,7 +18,7 @@ private int inputs, hidden_layers, outputs;
 private double input_vector [];
 private double hidden_weights [];
 private double output_weights [];
-
+ 
 private double b_hidden [];
 private double b_output [];
 private double hidden_vector[];
