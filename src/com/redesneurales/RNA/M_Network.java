@@ -15,12 +15,14 @@ package com.redesneurales.RNA;
 */
 public class M_Network {
 private int inputs, hidden_layers, outputs;
-private double input_weights [];
+private double input_vector [];
 private double hidden_weights [];
 private double output_weights [];
-private double b_input [];
+
 private double b_hidden [];
 private double b_output [];
+private double hidden_vector[];
+private double output_vector[];
 //setters
 public void setInputs(int inputs){
 	this.inputs = inputs;
@@ -28,7 +30,7 @@ public void setInputs(int inputs){
 //vector_id usado para identificar que vector se modificara
 public void setWVector(double vector [],int vector_id){
 	if (vector_id == 1){
-		this.input_weights = vector;
+		this.input_vector = vector;
 	}else{
 		if(vector_id == 2){
 			this.hidden_weights=vector;
@@ -45,7 +47,7 @@ public void setWVector(double vector [],int vector_id){
 }
 public void setBVector(double vector [],int b_vector_id){
 	if (b_vector_id == 1){
-		this.b_input = vector;
+		//this.b_input = vector;
 	}else{
 		if(b_vector_id == 2){
 			this.b_hidden=vector;
@@ -60,7 +62,7 @@ public void setBVector(double vector [],int b_vector_id){
 		}
 	}
 }
-public void setInputWVector(double vector []){
+public void setInputVector(double vector []){
 	this.setWVector(vector, 1);
 }
 public void setHiddenWVector(double vector[]){
@@ -69,9 +71,7 @@ public void setHiddenWVector(double vector[]){
 public void setOutputWVector(double vector[]){
 	this.setWVector(vector, 3);
 }
-public void setInputBVector(double vector []){
-	this.setBVector(vector, 1);
-}
+
 public void setHiddenBVector(double vector[]){
 	this.setBVector(vector, 2);
 }
@@ -84,6 +84,14 @@ public void setHiddenLayers(int hidden_layers){
 public void setOutputs(int outputs){
 	this.outputs= outputs;
 }
+//Vector que sera la salida de ComputeHiddenValues
+public void setHiddenVector(double [] hidden_vector){
+	this.hidden_vector = hidden_vector;
+}
+//Vector que será la salida de ComputeOutputs
+public void setOutputVector(double [] output_vector){
+	this.output_vector = output_vector;
+}
 //getters
 public int getInputs(){
 	return this.inputs;
@@ -94,8 +102,8 @@ public int getOutputs(){
 public int getHiddenLayers(){
 	return this.hidden_layers;
 }
-public double [] getInputWVector(){
-	return this.input_weights;
+public double [] getInputVector(){
+	return this.input_vector;
 }
 public double [] getHiddenWVector(){
 	return this.hidden_weights;
@@ -103,14 +111,19 @@ public double [] getHiddenWVector(){
 public double [] getOutputWVector(){
 	return this.output_weights;
 }
-public double [] getInputBVector(){
-	return this.b_input;
-}
+
 public double [] getHiddenBVector(){
 	return this.b_hidden;
 }
 public double [] getOutputBVector(){
 	return this.b_output;
+}
+public double[] getHiddenVector(){
+	return this.hidden_vector;
+}
+//Vector que será la salida de ComputeOutputs
+public double[] getOutputVector(){
+	return this.output_vector ;
 }
 //Iniciar Valores de los tres elementos con una sola funcion.
 public void initRNA(int inputs, int hidden_layers, int outputs){
