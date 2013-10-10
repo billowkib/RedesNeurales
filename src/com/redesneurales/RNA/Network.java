@@ -16,6 +16,23 @@ public class Network {
 		//La RNA se tiene que inicializar o de otra manera no se podrán añadir pesos y demás
 		m_net.initRNA(inputs, hidden_layers, outputs);	
 	}
+	public void RunFromProps (){
+		/*Con este metodo se podrá correr el programa con las propiedades ya existentes en
+		 * el archivo rna.properties, las reglas para que las propiedades esten bien son
+		 * Las propiedades inputs, hidden_layers y outputs pueden ser cualquier entero
+		 * La propiedad input_vector debe contener (inputs) elementos
+		 * la propiedad hidden_weights debe contener (inputs * hidden_layers) elementos
+		 * La propiedad output_weights debe contener (hidden_layers * outputs) elementos
+		 * La propiedad b_hidden debe contener (hidden_layers) elementos
+		 * La propiedad b_outputs debe contener (output) elementos 
+		 * Se recomienda correr primero DefaultTest1 o DefaultTest2 para generar el archivo
+		 * Una vez generado se puede modificar el archivo libremente*/
+		M_Network m_net = new M_Network();
+		//inputs;hiddenlayers;outputs;inputVector;hiddenW;outputW;bHidden;bOutput
+	m_net = ComputeOutputs(m_net);
+	printResults(m_net);
+		
+	}
 	public void DefaultTest1(){
 		//contendra la prueba a la red con los valores predeterminados encargados
 		//Todos los pesos (bias y ponderaciones) = 1
@@ -25,7 +42,24 @@ public class Network {
 		String [] testValues ={"2","1","1","1,1","1,1","1","1","1"};
 		
 		FillProperties(testValues);
-		m_net = ComputeOutputs(m_net);	
+		m_net = ComputeOutputs(m_net);
+		printResults(m_net);
+
+	}
+	public void DefaultTest2(){
+		//contendra la prueba a la red con los valores predeterminados encargados
+		//Todos los pesos (bias y ponderaciones) = 1
+		//Los pesos que van a la capa oculta serán de 1.5
+		//inputs = 2, hidden layers = 2, outputs = 1
+		M_Network m_net = new M_Network();
+			//inputs;hiddenlayers;outputs;inputVector;hiddenW;outputW;bHidden;bOutput
+		String [] testValues ={"2","2","1","1,1","1.5,1.5,1.5,1.5","1,1","1,1","1"};
+		
+		FillProperties(testValues);
+		m_net = ComputeOutputs(m_net);
+		printResults(m_net);
+	}
+	public static void printResults (M_Network m_net){
 		System.out.println("Valores de las neuronas en capa oculta:");
 		for (int i=0;i<m_net.getHiddenLayers();i++){
 			System.out.println(m_net.getHiddenVector()[i]);
@@ -34,9 +68,6 @@ public class Network {
 		for (int i=0;i<m_net.getOutputs();i++){
 			System.out.println(m_net.getOutputVector()[i]);
 		}
-	}
-	public void DefaultTest2(){
-		
 	}
 	//Empieza metodo para llenar el archivo de propiedades
 	public static void FillProperties(String vectors[]){
@@ -58,6 +89,7 @@ public class Network {
 		}
 	}
 	//Empieza metodo que hace el parsing de las propiedades de String a un arreglo de dobles
+	
 	public static double [] parseProperties(String toParse, int vectorSize){
 		String [] to_Vector= toParse.split("\\s*,\\s*");
 		double [] parsedArray = new double[vectorSize];
@@ -66,7 +98,7 @@ public class Network {
 		return parsedArray;
 	}
 	//Metodo que calcula los valores de las neuronas de salida
-	public static M_Network ComputeOutputs(M_Network m_net){
+	public static M_Network GetAndAssignProps (M_Network m_net){
 		Properties props = new Properties();
 		try {
 			props.load(new FileInputStream("rna.properties"));
@@ -79,7 +111,6 @@ public class Network {
 				props.getProperty("b_hidden"),
 				props.getProperty("b_output")
 		};
-		//M_Network m_net = new M_Network();
 		System.out.println(str[0]);
 		System.out.println(str[1]);
 		System.out.println(str[2]);
@@ -107,7 +138,13 @@ public class Network {
 		m_net.setHiddenBVector(parseProperties(str[6], m_net.getHiddenLayers()));
 		
 		m_net.setOutputBVector(parseProperties(str[7], m_net.getOutputs()));
-		
+		} catch(IOException ex) {
+			ex.printStackTrace();
+		}
+		return m_net;
+	}
+	public static M_Network ComputeOutputs(M_Network m_net){
+		m_net = GetAndAssignProps(m_net);
 		double [] salida1 = ComputeHiddenValues(m_net);
 		double sum =0.0;
 		double[] salida2 =new double [m_net.getOutputs()];
@@ -119,9 +156,6 @@ public class Network {
 		}
 		m_net.setOutputVector(salida2);
 		m_net.setHiddenVector(salida1);
-		}catch(IOException ex){
-			ex.printStackTrace();
-		}
 	return m_net;
 	}
 	public static double SigmoidalActivation (double sum){
@@ -140,17 +174,33 @@ public class Network {
 	}
 	public static void main (String[] args){
 		//Aqui se irá llenando el flujo del programa, para darme una idea
+		Network net = new Network();
 		while(true){
-		System.out.println("Ingresa opcion \n 1.-Llenar pesos manualmente");
-		System.out.println("2.- Llenar pesos de manera aleatoria");
-		System.out.println("3.- Usar las pruebas proporcionadas por el doctor (2,1,1) con pesos= 1; (2,2,1) con hidden_weights = 1.5 y el resto de pesos con valor de 1");
+		System.out.println("Ingresa opcion ");
+		System.out.println("1.-Hacer prueba proporcionada (2,1,1) con pesos =1");
+		System.out.println("2.-Usar pruebas proporcionada (2,2,1) con hidden_weights = 1.5 y el resto de pesos con valor de 1");
+		System.out.println("3.-Usar archivo de propiedades rna.properties (el archivo ya debe existir, se puede crear automaticamente con la opcion 1 o 2 y despues ser modificado)");
+		System.out.println("Presionar cualquier otra tecla acabara con la ejecucion del programa");
 		Scanner sc = new Scanner(System.in);
 		//Pedazo en construcción, usar las propiedades para obtener los valores y generar los casos ya planeados.
-			if(sc.nextInt() == 3 ){
-				Network net = new Network ();
+		int option = sc.nextInt();
+			if(option == 1 ){
+				
 				net.DefaultTest1();
 			}else {
-				break;
+				if (option == 2) {
+					
+					net.DefaultTest2();
+				}
+				else{
+					 if(option ==3){
+						 net.RunFromProps();
+					 }
+					 else {
+						 break;
+					 }
+				}
+				
 			}
 		}
 	}
