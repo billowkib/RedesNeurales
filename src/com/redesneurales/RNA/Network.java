@@ -11,11 +11,7 @@ public class Network {
 	Network(){
 		System.out.println("Objeto network creado");
 	}
-	public Network(int inputs, int hidden_layers, int outputs){
-		M_Network m_net = new M_Network(); 
-		//La RNA se tiene que inicializar o de otra manera no se podrán añadir pesos y demás
-		m_net.initRNA(inputs, hidden_layers, outputs);	
-	}
+	
 	public void RunFromProps (){
 		/*Con este metodo se podrá correr el programa con las propiedades ya existentes en
 		 * el archivo rna.properties, las reglas para que las propiedades esten bien son
